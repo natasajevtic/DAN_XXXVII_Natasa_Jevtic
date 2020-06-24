@@ -17,7 +17,8 @@ namespace Zadatak_1
         static int[] choosenRoutes;
         static object locker = new object();
         static bool isGenerated = true;
-        static Thread[] threadForCharge = new Thread[10];
+        static Thread[] threadsForTrucks = new Thread[10];
+        static Thread[] threadsForDestination = new Thread[10];
         /// <summary>
         /// This method generates random numbers that represents possible routes of trucks and writes them in file.
         /// </summary>
@@ -69,7 +70,6 @@ namespace Zadatak_1
                         {
                             choosenRoutes[i] = numbersFromFile[r.Next(0, numbersFromFile.Length)];
                         }
-                        Console.WriteLine("nije uspio");
                     }
                 }
                 //if routes are generated
@@ -127,21 +127,39 @@ namespace Zadatak_1
             //blocking other threads while this two threads not finish their job
             generateRoutes.Join();
             menager.Join();
-            //creating 10 threads that perfomrms charge of trucks
-            for (int i = 0; i < threadForCharge.Length; i++)
+            //creating 10 threads that performs charge of trucks
+            for (int i = 0; i < threadsForTrucks.Length; i++)
             {
-                threadForCharge[i] = new Thread(trucks[i].Charging);
+                threadsForTrucks[i] = new Thread(trucks[i].Charging);
             }           
-            for (int i = 0; i < threadForCharge.Length; i++)
+            for (int i = 0; i < threadsForTrucks.Length; i++)
             {
-                threadForCharge[i].Start();
+                threadsForTrucks[i].Start();
             }
-            for (int i = 0; i < threadForCharge.Length; i++)
+            for (int i = 0; i < threadsForTrucks.Length; i++)
             {
-                threadForCharge[i].Join();
+                threadsForTrucks[i].Join();
             }
             Thread routeAssignment = new Thread(RouteAssignment);
             routeAssignment.Start();
+            //creating 10 threads that performs delivery of trucks
+            for (int i = 0; i < threadsForTrucks.Length; i++)
+            {
+                threadsForTrucks[i] = new Thread(trucks[i].Delivery);
+            }
+            //creating 10 threads that represent destinations which waiting for delivery and discharge
+            for (int i = 0; i < threadsForDestination.Length; i++)
+            {
+                threadsForDestination[i] = new Thread(trucks[i].Discharge);
+            }
+            for (int i = 0; i < threadsForDestination.Length; i++)
+            {
+                threadsForDestination[i].Start();
+            }
+            for (int i = 0; i < threadsForTrucks.Length; i++)
+            {
+                threadsForTrucks[i].Start();
+            }
             Console.ReadLine();
         }
     }
