@@ -17,6 +17,7 @@ namespace Zadatak_1
         static int[] choosenRoutes;
         static object locker = new object();
         static bool isGenerated = true;
+        static Thread[] threadForCharge = new Thread[10];
         /// <summary>
         /// This method generates random numbers that represents possible routes of trucks and writes them in file.
         /// </summary>
@@ -115,6 +116,19 @@ namespace Zadatak_1
             //blocking other threads while this two threads not finish their job
             generateRoutes.Join();
             menager.Join();
+            //creating 10 threads that perfomrms charge of trucks
+            for (int i = 0; i < threadForCharge.Length; i++)
+            {
+                threadForCharge[i] = new Thread(trucks[i].Charging);
+            }           
+            for (int i = 0; i < threadForCharge.Length; i++)
+            {
+                threadForCharge[i].Start();
+            }
+            for (int i = 0; i < threadForCharge.Length; i++)
+            {
+                threadForCharge[i].Join();
+            }
             Console.ReadLine();
         }
     }
