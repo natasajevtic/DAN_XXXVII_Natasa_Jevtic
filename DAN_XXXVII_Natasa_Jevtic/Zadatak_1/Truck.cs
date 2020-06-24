@@ -2,7 +2,7 @@
 using System.Threading;
 
 namespace Zadatak_1
-{
+{   
     class Truck
     {
         public int Route { get; set; }
@@ -35,8 +35,6 @@ namespace Zadatak_1
             lock (locker2)
             {
                 TimeOfDelivery = r.Next(500, 5000);
-                //int durationOfDelivery = r.Next(500, 5000);
-                //TimeOfDelivery = durationOfDelivery;
                 Console.WriteLine("Delivery of {0} will be made for {1} miliseconds.", Name, TimeOfDelivery);
                 Thread.Sleep(TimeOfDelivery);
                 Monitor.Pulse(locker2);
