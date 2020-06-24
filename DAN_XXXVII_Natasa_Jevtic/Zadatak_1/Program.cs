@@ -99,6 +99,17 @@ namespace Zadatak_1
             }
         }
         /// <summary>
+        /// This method assignments routes to trucks.
+        /// </summary>
+        static void RouteAssignment()
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                trucks[i].Route = choosenRoutes[i];
+                Console.WriteLine("Route {1} is assigned to {0}.", trucks[i].Name, trucks[i].Route);
+            }
+        }
+        /// <summary>
         /// This method manages creating and performing of threads.
         /// </summary>
         /// <param name="args"></param>
@@ -129,6 +140,8 @@ namespace Zadatak_1
             {
                 threadForCharge[i].Join();
             }
+            Thread routeAssignment = new Thread(RouteAssignment);
+            routeAssignment.Start();
             Console.ReadLine();
         }
     }
